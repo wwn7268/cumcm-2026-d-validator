@@ -19,7 +19,7 @@ AUTO = '自动识别'
 class ValidatorApp:
     def __init__(self, root):
         self.root = root
-        root.title('D题 · 学生附件验证器 v1.1.0')
+        root.title('D题 · 学生附件验证器 v1.1.1')
         root.geometry('1210x870')
         root.minsize(940, 690)
         style = ttk.Style(root)
@@ -107,10 +107,11 @@ class ValidatorApp:
         self.conflict_tree = self._tree(self.issue_page, [('kind', '类型', 110), ('id1', '装备1', 120), ('use1', '次数1', 55), ('id2', '装备2', 120), ('use2', '次数2', 55), ('time', '交叠时间', 150), ('freq', '交叠频段', 150)], height=9)
         self.conflict_tree.bind('<Double-1>', self._locate_conflict)
         self.plot_holder = ttk.Frame(self.plot_page)
-        self.plot_holder.pack(fill='both', expand=True)
         self.toolbar_holder = ttk.Frame(self.plot_page)
-        self.toolbar_holder.pack(fill='x')
-        ttk.Label(self.plot_page, textvariable=self.pointer, padding=5).pack(anchor='w')
+        # Reserve the controls before the canvas takes the remaining height.
+        ttk.Label(self.plot_page, textvariable=self.pointer, padding=5).pack(side='bottom', fill='x')
+        self.toolbar_holder.pack(side='bottom', fill='x')
+        self.plot_holder.pack(fill='both', expand=True)
 
     @staticmethod
     def _tree(parent, columns, height):
