@@ -1,0 +1,32 @@
+# Local validation outputs and student files
+results/
+outputs/
+reports/
+示例报告/
+验证报告*/
+inputs/
+student_inputs/
+学生附件/
+tests/_generated/
+
+# Python environments and generated cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# Temporary and editor files
+*.log
+*.tmp
+*.bak
+~$*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
