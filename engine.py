@@ -469,7 +469,7 @@ def analyze_plans(plans: list[dict], horizon: int = 643) -> dict:
 def validate_submission(question: int, submission: Path | str, base_q2: Path | str | None = None, *,
                         horizon: int = 643, sheet: str | None = None, base_sheet: str | None = None,
                         original_path: Path | str | None = None) -> dict:
-    """验证学生附件。问题三需要其问题二基础方案；问题四独立从原始附件重建。"""
+    """验证提交附件。问题三需要其问题二基础方案；问题四独立从原始附件重建。"""
     result = dict(question=question, status="invalid", passed=False, errors=[], warnings=[], plans=[], conflicts=[], summary={},
                   settings=dict(horizon=horizon, frequency_range=[0, 100], interval_convention="half-open", fixed_base=question == 3,
                                 horizon_note="时间窗是建模约定，默认 [0,643)，可由教师修改；并非将 643 视为题目额外硬性条件。",
@@ -489,12 +489,12 @@ def validate_submission(question: int, submission: Path | str, base_q2: Path | s
         base = None
         if question == 3:
             if not base_q2:
-                raise InputError("missing_base", "问题三必须提供同一学生的问题二附件，才能检查新增计划与固定原有计划的冲突。")
+                raise InputError("missing_base", "问题三必须提供同一套方案的问题二附件，才能检查新增计划与固定原有计划的冲突。")
             base = validate_submission(2, base_q2, horizon=horizon, sheet=base_sheet, original_path=original_path)
             result["base_validation"] = {key: base[key] for key in ("status", "passed", "errors", "summary", "settings")}
             result["settings"]["base_file"] = str(base_q2)
             if not base["passed"]:
-                result["errors"].append(_error("base_not_feasible", "学生的问题二基础方案未通过检查；问题三不能判为可行。"))
+                result["errors"].append(_error("base_not_feasible", "第二问基础方案未通过检查；问题三不能判为可行。"))
                 result["errors"].extend({**e, "code": "base_" + e["code"]} for e in base["errors"])
                 incomplete = base["status"] == "invalid"
         plans, errors, warnings, parse_incomplete = _parse_rows(Path(submission), question, original, sheet, horizon)

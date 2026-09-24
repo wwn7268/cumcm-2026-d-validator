@@ -1,15 +1,16 @@
 """Offline desktop validator for D-question submissions."""
 from pathlib import Path
+import gc
 import os
 import queue
 import threading
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
-from tkinter.scrolledtext import ScrolledText
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from engine import validate_submission, read_sheet_names
 from reporting import summary_text, export_report, new_output_dir, STATUS, text_of
+from result_panel import ResultPanel
 from visuals import make_figure, occupants
 
 HERE = Path(__file__).resolve().parent
@@ -19,7 +20,7 @@ AUTO = '自动识别'
 class ValidatorApp:
     def __init__(self, root):
         self.root = root
-        root.title('2026年高教社杯数学建模竞赛D题 · 解答验证器 v1.1.2')
+        root.title('2026年高教社杯数学建模竞赛D题 · 解答验证器 v1.2.0')
         root.geometry('1210x870')
         root.minsize(940, 690)
         style = ttk.Style(root)
@@ -51,8 +52,8 @@ class ValidatorApp:
     def _build(self):
         outer = ttk.Frame(self.root, padding=14)
         outer.pack(fill='both', expand=True)
-        ttk.Label(outer, text='D题学生附件 · 可行性验证', style='Heading.TLabel').pack(anchor='w')
-        ttk.Label(outer, text='按题目模板读取 Excel / CSV，检查规则及全部重复使用区间，绘制时频占用矩阵。').pack(anchor='w', pady=(4, 10))
+        ttk.Label(outer, text='2026年高教社杯数学建模竞赛D题 · 解答验证器', style='Heading.TLabel').pack(anchor='w')
+        ttk.Label(outer, text='选择附件，一次查看可行性、调整统计与时频冲突。').pack(anchor='w', pady=(4, 10))
         form = ttk.LabelFrame(outer, text='附件与验证设置', padding=10)
         form.pack(fill='x')
         form.columnconfigure(1, weight=1)
@@ -61,7 +62,7 @@ class ValidatorApp:
         ttk.Label(form, text='验证问题').grid(row=0, column=0, sticky='w', padx=(0, 10))
         for q in (2, 3, 4):
             ttk.Radiobutton(radios, text=f'问题{q}', variable=self.question, value=q, command=self._question_changed).pack(side='left', padx=(0, 18))
-        ttk.Label(form, text='学生提交附件').grid(row=1, column=0, sticky='w')
+        ttk.Label(form, text='提交附件').grid(row=1, column=0, sticky='w')
         ttk.Entry(form, textvariable=self.submission).grid(row=1, column=1, sticky='ew', padx=5, pady=4)
         ttk.Button(form, text='选择文件…', command=lambda: self._browse(False)).grid(row=1, column=2, padx=4)
         self.sheet_combo = ttk.Combobox(form, textvariable=self.sheet, values=[AUTO], state='readonly', width=17)
@@ -77,7 +78,7 @@ class ValidatorApp:
         line.grid(row=3, column=0, columnspan=4, sticky='ew', pady=(6, 0))
         ttk.Label(line, text='时间窗 [0, H)，H =').pack(side='left')
         ttk.Entry(line, textvariable=self.horizon, width=7).pack(side='left', padx=4)
-        ttk.Label(line, text='默认643沿用原计划最晚结束时刻；请与学生建模假设核对（整数1～10000）。').pack(side='left', padx=8)
+        ttk.Label(line, text='默认643沿用原计划最晚结束时刻；请与建模假设核对（整数1～10000）。').pack(side='left', padx=8)
         ttk.Label(form, textvariable=self.question_note, foreground='#5c6070').grid(row=4, column=0, columnspan=4, sticky='w', pady=(5, 0))
         buttons = ttk.Frame(outer)
         buttons.pack(fill='x', pady=10)
@@ -89,7 +90,7 @@ class ValidatorApp:
         self.open_button = ttk.Button(buttons, text='打开结果目录', command=self._open_output, state='disabled')
         self.open_button.pack(side='left', padx=7)
         ttk.Button(buttons, text='使用说明', command=lambda: os.startfile(str(HERE / '使用说明.md'))).pack(side='right')
-        self.verdict_label = ttk.Label(outer, textvariable=self.verdict, font=('Microsoft YaHei', 12, 'bold'))
+        self.verdict_label = ttk.Label(outer, textvariable=self.verdict, font=('Microsoft YaHei', 10))
         self.verdict_label.pack(anchor='w', pady=(0, 8))
         self.tabs = ttk.Notebook(outer)
         self.tabs.pack(fill='both', expand=True)
@@ -99,8 +100,10 @@ class ValidatorApp:
         self.tabs.add(self.summary_page, text=' 判定与统计 ')
         self.tabs.add(self.issue_page, text=' 问题与冲突 ')
         self.tabs.add(self.plot_page, text=' 时频矩阵 ')
-        self.summary_box = ScrolledText(self.summary_page, wrap='word', padx=12, pady=10, state='disabled')
-        self.summary_box.pack(fill='both', expand=True)
+        self.result_panel = ResultPanel(self.summary_page, self._focus_conflict,
+                                       lambda: self.tabs.select(self.issue_page))
+        self.result_panel.pack(fill='both', expand=True)
+        self.summary_box = None
         ttk.Label(self.issue_page, text='附件格式与调整规则').pack(anchor='w')
         self.error_tree = self._tree(self.issue_page, [('sheet', '工作表', 120), ('row', '行号', 55), ('id', '装备/序号', 100), ('message', '问题', 760)], height=5)
         ttk.Label(self.issue_page, text='时频交叠事件（双击定位到矩阵；同一装备对可能发生多次交叠）').pack(anchor='w', pady=(8, 3))
@@ -145,7 +148,7 @@ class ValidatorApp:
         self.question_note.set(notes[question])
 
     def _browse(self, base):
-        path = filedialog.askopenfilename(title='选择第二问执行方案' if base else '选择学生提交附件', filetypes=[('Excel或CSV附件', '*.xlsx *.xlsm *.csv'), ('所有文件', '*.*')])
+        path = filedialog.askopenfilename(title='选择第二问执行方案' if base else '选择提交附件', filetypes=[('Excel或CSV附件', '*.xlsx *.xlsm *.csv'), ('所有文件', '*.*')])
         if not path:
             return
         (self.base if base else self.submission).set(path)
@@ -178,20 +181,29 @@ class ValidatorApp:
             messagebox.showerror('时间窗格式错误', 'H须为1～10000的整数。')
             return
         if not self.submission.get().strip():
-            messagebox.showinfo('未选择附件', '请先选择学生附件。')
+            messagebox.showinfo('未选择附件', '请先选择提交附件。')
             return
         if self.question.get() == 3 and not self.base.get().strip():
-            messagebox.showinfo('缺少第二问方案', '验证第三问时，需要选择学生采用的第二问执行方案。')
+            messagebox.showinfo('缺少第二问方案', '验证第三问时，需要选择采用的第二问执行方案。')
             return
         args = dict(question=self.question.get(), submission=Path(self.submission.get().strip()),
                     base_q2=Path(self.base.get().strip()) if self.question.get() == 3 else None,
                     horizon=horizon, sheet=None if self.sheet.get() == AUTO else self.sheet.get(),
                     base_sheet=None if self.base_sheet.get() == AUTO else self.base_sheet.get())
         self.busy = True
+        self.result = None
+        self._dispose_plot()
+        for tree in (self.error_tree, self.conflict_tree):
+            tree.delete(*tree.get_children())
+        self.conflict_items.clear()
+        self.result_panel.show_waiting(busy=True)
+        self.tabs.select(self.summary_page)
         self.run_button.configure(state='disabled')
         self.export_button.configure(state='disabled')
         self.verdict.set('正在解析附件并检查完整使用计划…')
         self.verdict_label.configure(foreground='#37475b')
+        # Dispose Tk/Matplotlib cycles on the UI thread before the worker allocates data.
+        gc.collect()
         def worker():
             try:
                 self.job_queue.put(('result', validate_submission(**args)))
@@ -211,7 +223,9 @@ class ValidatorApp:
                 self.result = None
                 self.verdict.set('校验未完成，不能据此认定方案可行')
                 self.verdict_label.configure(foreground='#a6323c')
-                messagebox.showerror('验证失败', payload)
+                failed = dict(status='invalid', question=self.question.get(),
+                              errors=[dict(message=payload)], summary={}, plans=[], conflicts=[])
+                self.summary_box = self.result_panel.render(failed, summary_text(failed))
             else:
                 try:
                     self.show_result(payload)
@@ -229,10 +243,7 @@ class ValidatorApp:
         q = result.get('question')
         self.verdict.set(f'问题{q}：{STATUS.get(status, status)}　｜　该判定不证明最优性')
         self.verdict_label.configure(foreground='#197456' if status == 'feasible' else '#b62f40')
-        self.summary_box.configure(state='normal')
-        self.summary_box.delete('1.0', 'end')
-        self.summary_box.insert('end', summary_text(result))
-        self.summary_box.configure(state='disabled')
+        self.summary_box = self.result_panel.render(result, summary_text(result))
         for tree in (self.error_tree, self.conflict_tree):
             tree.delete(*tree.get_children())
         for e in result.get('errors', []):
@@ -303,6 +314,13 @@ class ValidatorApp:
         self.tabs.select(self.plot_page)
         self.canvas.draw_idle()
 
+    def _focus_conflict(self, index):
+        items = self.conflict_tree.get_children()
+        if 0 <= index < len(items):
+            self.conflict_tree.selection_set(items[index])
+            self.conflict_tree.see(items[index])
+            self._locate_conflict()
+
     def _export(self):
         if not self.result:
             return
@@ -312,9 +330,9 @@ class ValidatorApp:
         self.root.configure(cursor='watch')
         self.root.update_idletasks()
         try:
-            source = self.result.get('settings', {}).get('input_file') or '学生附件'
+            source = self.result.get('settings', {}).get('input_file') or '提交附件'
             if not isinstance(source, (str, Path)):
-                source = '学生附件'
+                source = '提交附件'
             out = new_output_dir(root, source, self.result.get('question', 2))
             self.last_output = export_report(self.result, out)
             self.open_button.configure(state='normal')

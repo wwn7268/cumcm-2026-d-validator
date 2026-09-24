@@ -35,7 +35,7 @@ def summary_text(result):
     if result.get('question')==4:
         lines+=['第四问以原始150台装备为基准；仅C类可改间隔，间隔变化量不超过10Δt且新间隔非负。',
                 '调频、调时、改间隔至多选择一项；改间隔时首次开始保持不变，后续使用按新周期展开。']
-    if settings.get('input_file'):lines.append('学生附件：'+settings['input_file'])
+    if settings.get('input_file'):lines.append('提交附件：'+settings['input_file'])
     if settings.get('base_file'):lines.append('第二问基础附件：'+settings['base_file'])
     lines+=['','统计：']
     labels={k:METRIC_LABELS[k] for k in ('executed_count','rectangle_count','added_count','occupied_area','demand_area',
@@ -75,7 +75,7 @@ def summary_text(result):
     if result.get('warnings'):
         lines+=['','说明：']+[f'  {text_of(w)}' for w in result['warnings']]
     lines+=['','面积利用率以实际占用区域的并集面积为分子，空闲间隔不计入。',
-            '默认时间上限643沿用原计划最晚结束时刻；这是验证设置，应与学生论文的假设一致。']
+            '默认时间上限643沿用原计划最晚结束时刻；这是验证设置，应与论文的假设一致。']
     return '\n'.join(lines)
 
 def safe_value(v):
