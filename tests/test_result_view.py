@@ -25,6 +25,13 @@ class ResultViewTests(unittest.TestCase):
         self.assertEqual([m["value"] for m in view["metrics"]], ["全部", "6", "126", "678"])
         self.assertEqual((view["frequency_distance"], view["time_distance"]), (581, 97))
         self.assertEqual(view["total_amplitude"], 678)
+        self.assertEqual(view["by_category"], {
+            "A": dict(cancelled=0, adjusted=16, translation_distance=86),
+            "B": dict(cancelled=4, adjusted=34, translation_distance=197),
+            "C": dict(cancelled=2, adjusted=76, translation_distance=395)})
+        self.assertEqual([m["breakdown"] for m in view["metrics"][1:]],
+                         ["A 0 · B 4 · C 2 台", "A 16 · B 34 · C 76 台", "A 86 · B 197 · C 395 步"])
+        self.assertNotIn("breakdown", view["metrics"][0])
 
     def test_question_three_metrics_belong_to_base(self):
         view = build_result_view(self.results[3])
@@ -32,6 +39,7 @@ class ResultViewTests(unittest.TestCase):
         self.assertEqual(view["added_count"], 136)
         self.assertIn("第二问基础方案", view["metrics"][1]["hint"])
         self.assertTrue(any("新增 136 台" in note for note in view["notes"]))
+        self.assertEqual(view["by_category"], build_result_view(self.results[2])["by_category"])
 
     def test_question_four_separates_gap_from_translation(self):
         view = build_result_view(self.results[4])
@@ -40,6 +48,12 @@ class ResultViewTests(unittest.TestCase):
         self.assertEqual(view["translation_distance"] + view["gap_distance"], view["total_amplitude"])
         self.assertEqual(view["total_amplitude"], self.results[4]["summary"]["objective_tuple"][6])
         self.assertTrue(any("41 台间隔调整" in note for note in view["notes"]))
+        self.assertEqual(view["by_category"], {
+            "A": dict(cancelled=0, adjusted=18, translation_distance=84),
+            "B": dict(cancelled=2, adjusted=34, translation_distance=199),
+            "C": dict(cancelled=2, adjusted=88, translation_distance=254)})
+        for key in ("cancelled", "adjusted", "translation_distance"):
+            self.assertEqual(sum(category[key] for category in view["by_category"].values()), view[key])
 
     def test_parse_failure_does_not_display_partial_zero(self):
         result = validate_submission(2, APP / "examples/result2_重复编号示例.xlsx")
@@ -49,6 +63,9 @@ class ResultViewTests(unittest.TestCase):
         self.assertEqual([m["value"] for m in view["metrics"]], ["未完成", "—", "—", "—"])
         for key in ("cancelled", "adjusted", "translation_distance", "total_amplitude", "added_count"):
             self.assertIsNone(view[key])
+        self.assertTrue(all(value is None for category in view["by_category"].values() for value in category.values()))
+        self.assertEqual([m["breakdown"] for m in view["metrics"][1:]],
+                         ["A — · B — · C — 台", "A — · B — · C — 台", "A — · B — · C — 步"])
 
     def test_incomplete_analysis_or_missing_plan_hides_metrics(self):
         for mode in ("analysis", "plans"):
@@ -84,6 +101,7 @@ class ResultViewTests(unittest.TestCase):
         self.assertEqual(view["translation_distance"], 678)
         self.assertEqual(view["gap_distance"], 0)
         self.assertEqual(view["adjusted"], 126)
+        self.assertEqual(view["by_category"], build_result_view(self.results[2])["by_category"])
 
     def test_all_canceled_is_a_known_zero_not_missing(self):
         result = deepcopy(self.results[2])

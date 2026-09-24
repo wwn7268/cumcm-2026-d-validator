@@ -5,9 +5,14 @@ from __future__ import annotations
 def _complete_originals(plans: list[dict]) -> bool:
     expected = {f"{cls}{n:03d}" for cls, count in (("A", 20), ("B", 40), ("C", 90))
                 for n in range(1, count + 1)}
-    required = {"id", "canceled", "df", "dt", "dg"}
+    required = {"id", "cls", "canceled", "df", "dt", "dg"}
     return (len(plans) == 150 and {p.get("id") for p in plans} == expected
-            and all(required <= p.keys() for p in plans))
+            and all(required <= p.keys() and p["cls"] in {"A", "B", "C"} for p in plans))
+
+
+def _breakdown(by_category: dict, key: str, unit: str) -> str:
+    return " · ".join(f"{cls} {values[key] if values[key] is not None else '—'}"
+                      for cls, values in by_category.items()) + " " + unit
 
 
 def build_result_view(result: dict) -> dict:
@@ -23,7 +28,9 @@ def build_result_view(result: dict) -> dict:
 
     view = dict(status=status, cancelled=None, adjusted=None, translation_distance=None,
                 frequency_distance=None, time_distance=None, gap_distance=None,
-                total_amplitude=None, added_count=None, notes=[])
+                total_amplitude=None, added_count=None, notes=[],
+                by_category={cls: dict(cancelled=None, adjusted=None, translation_distance=None)
+                             for cls in "ABC"})
     if complete:
         active = [p for p in old if not p["canceled"]]
         frequency = sum(abs(p["df"]) for p in active)
@@ -34,6 +41,13 @@ def build_result_view(result: dict) -> dict:
                     translation_distance=frequency + time, frequency_distance=frequency,
                     time_distance=time, gap_distance=gap, total_amplitude=frequency + time + gap,
                     added_count=sum(bool(p.get("is_new")) and not p.get("canceled") for p in plans))
+        for cls in "ABC":
+            category_old = [p for p in old if p["cls"] == cls]
+            category_active = [p for p in category_old if not p["canceled"]]
+            view["by_category"][cls] = dict(
+                cancelled=sum(bool(p["canceled"]) for p in category_old),
+                adjusted=sum(any(p[k] for k in ("df", "dt", "dg")) for p in category_active),
+                translation_distance=sum(abs(p["df"]) + abs(p["dt"]) for p in category_active))
 
     if status == "feasible":
         view.update(title="验证通过", message="规则、边界及全部重复用频区间检查通过，未发现冲突。")
@@ -55,9 +69,12 @@ def build_result_view(result: dict) -> dict:
                      if complete else "检查完成后统计")
     view["metrics"] = [
         dict(label="通过检查", value=check_value, hint=check_hint),
-        dict(label="已撤销", value=str(view["cancelled"]) if complete else "—", hint=scope + " · 台"),
-        dict(label="已调整", value=str(view["adjusted"]) if complete else "—", hint=scope + " · 台"),
-        dict(label="总平移距离", value=str(view["translation_distance"]) if complete else "—", hint=distance_hint),
+        dict(label="已撤销", value=str(view["cancelled"]) if complete else "—", hint=scope + " · 台",
+             breakdown=_breakdown(view["by_category"], "cancelled", "台")),
+        dict(label="已调整", value=str(view["adjusted"]) if complete else "—", hint=scope + " · 台",
+             breakdown=_breakdown(view["by_category"], "adjusted", "台")),
+        dict(label="总平移距离", value=str(view["translation_distance"]) if complete else "—", hint=distance_hint,
+             breakdown=_breakdown(view["by_category"], "translation_distance", "步")),
     ]
     if result.get("question") == 3:
         view["notes"].append("撤销、调整和平移统计均属于第二问基础方案；新增装备不计入这些指标。")

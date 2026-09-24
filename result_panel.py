@@ -122,6 +122,7 @@ class ResultPanel(ttk.Frame):
         metrics = tk.Frame(self.body, bg=self.BACKGROUND)
         metrics.pack(fill='x', padx=16)
         self.metric_labels = []
+        self.metric_breakdown_labels = []
         for index, metric in enumerate(view['metrics']):
             metrics.columnconfigure(index, weight=1, uniform='metric')
             card = tk.Frame(metrics, bg='white', highlightbackground='#dfe7f0', highlightthickness=1,
@@ -132,8 +133,16 @@ class ResultPanel(ttk.Frame):
             value = self._label(card, metric['value'], size=28, color=color, bold=True,
                                 anchor='w', pady=(4, 2))
             self.metric_labels.append(value)
+            breakdown = None
+            if metric.get('breakdown'):
+                breakdown = self._label(card, metric['breakdown'], size=9, color=self.INK,
+                                        fill='x', pady=(0, 4))
+            self.metric_breakdown_labels.append(breakdown)
             hint = self._label(card, metric['hint'], size=9, color=self.MUTED, fill='x')
-            card.bind('<Configure>', lambda event, label=hint: label.configure(wraplength=max(100, event.width - 30)))
+            def resize_card(event, labels=tuple(label for label in (breakdown, hint) if label is not None)):
+                for label in labels:
+                    label.configure(wraplength=max(100, event.width - 30))
+            card.bind('<Configure>', resize_card)
         notes = tk.Frame(self.body, bg=self.BACKGROUND)
         notes.pack(fill='x', padx=20, pady=(10, 12))
         for note in view['notes']:
