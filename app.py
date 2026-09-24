@@ -19,7 +19,7 @@ AUTO = '自动识别'
 class ValidatorApp:
     def __init__(self, root):
         self.root = root
-        root.title('D题 · 学生附件验证器 v1.1.1')
+        root.title('2026年高教社杯数学建模竞赛D题 · 解答验证器 v1.1.2')
         root.geometry('1210x870')
         root.minsize(940, 690)
         style = ttk.Style(root)

@@ -1,12 +1,12 @@
-# D题学生附件验证器
+# 2026年高教社杯数学建模竞赛D题 · 解答验证器
 
-给 D 题第二、三、四问的 Excel 附件做一次检查：有没有违反调整规则，后续重复使用是否越界，哪些装备发生了冲突。结果可以画成时频矩阵，也可以导出成图片和 Excel 明细。
+本程序基于2026年高教社杯数学建模竞赛D题，用于检查第二、三、四问的 Excel 结果附件：有没有违反调整规则，后续重复使用是否越界，哪些装备发生了冲突。结果可以画成时频矩阵，也可以导出成图片和 Excel 明细。
 
 这是一个离线桌面程序，文件在本机读取，不修改学生原件，也不上传数据。**通过检查表示方案可行，不代表已经最优。**
 
 ## 下载
 
-**[下载最新版](https://github.com/wwn7268/cumcm-d-validator/releases/latest)**
+**[下载最新版](https://github.com/wwn7268/cumcm-2026-d-validator/releases/latest)**
 
 下载 ZIP 后先完整解压。电脑需要 **Python 3.10 或以上**，以及 Tkinter、openpyxl、numpy、matplotlib。Windows 安装 Python 时请勾选添加到 PATH，并保留 Tkinter 图形组件。
 

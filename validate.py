@@ -6,7 +6,7 @@ from reporting import export_report, new_output_dir, summary_text
 
 
 def main():
-    parser = argparse.ArgumentParser(description='D题第二、三、四问学生附件可行性验证')
+    parser = argparse.ArgumentParser(description='基于2026年高教社杯数学建模竞赛D题，验证第二、三、四问学生附件的可行性')
     parser.add_argument('question', type=int, choices=(2, 3, 4), help='问题编号')
     parser.add_argument('submission', type=Path, help='学生Excel或CSV附件')
     parser.add_argument('--base-q2', type=Path, help='第三问对应的第二问附件')
