@@ -50,6 +50,8 @@ def make_figure(result):
         ax1.imshow(categories.T,origin='lower',extent=extent,aspect='auto',interpolation='nearest',
                    cmap=ListedColormap(COLORS),vmin=0,vmax=5)
         suffix='（可解析部分；判定未通过）' if not result.get('passed') else ''
+        if result.get('question') == 1:
+            suffix='（原始计划，供核对冲突清单）'
         ax1.set_title('装备类别与冲突位置'+suffix,loc='left',fontsize=11,pad=10)
         ax1.legend(handles=[Patch(facecolor=c,label=l) for c,l in zip(COLORS,LABELS)],
                    loc='upper right',bbox_to_anchor=(1,1.20),ncol=6,frameon=False,fontsize=8)
@@ -70,6 +72,8 @@ def make_figure(result):
         ax2.set_xlabel('时间 / Δt')
         fig.suptitle(f'问题{result.get("question", "")} · 时频资源矩阵',fontsize=13,fontweight='bold')
         note=f'半开区间；显示窗口 [0,{horizon}) × [0,100)。超界占用仅在图中裁剪，仍判为违规。'
+        if result.get('question') == 1:
+            note=f'原始完整计划；显示窗口 [0,{horizon}) × [0,100)。第一问验证通过表示冲突清单正确。'
         if not valid_horizon:note='时间窗输入不合法；此图仅为默认窗口的占位图，不代表完成验证。'
         fig.supxlabel(note,fontsize=8)
     return fig,counts,categories

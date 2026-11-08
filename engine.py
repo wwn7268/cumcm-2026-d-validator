@@ -185,7 +185,8 @@ def _read_table(path: Path, question: int, sheet: str | None) -> tuple[str, list
         for name in names:
             ws = workbook[name]
             # 只读取少量表头，选定后才读取数据；不执行任何公式或宏。
-            preview = [[c.value for c in row] for row in ws.iter_rows(min_row=1, max_row=20, max_col=min(ws.max_column or 1, MAX_COLUMNS + 1))]
+            preview_columns = min(ws.max_column or MAX_COLUMNS + 1, MAX_COLUMNS + 1)
+            preview = [[c.value for c in row] for row in ws.iter_rows(min_row=1, max_row=20, max_col=preview_columns)]
             found = _header(preview, question)
             if found:
                 matched.append((name, found))
@@ -199,6 +200,8 @@ def _read_table(path: Path, question: int, sheet: str | None) -> tuple[str, list
             raise InputError("table_limit", f"工作表范围超过 {MAX_ROWS} 条数据或 {MAX_COLUMNS} 列，请去掉多余格式行后重试；未完成检查。", sheet=name)
         rows = []
         for rowno, cells in enumerate(ws.iter_rows(), 1):
+            if rowno > MAX_ROWS + 20 or len(cells) > MAX_COLUMNS:
+                raise InputError("table_limit", f"工作表范围超过 {MAX_ROWS} 条数据或 {MAX_COLUMNS} 列，未完成检查。", sheet=name, row=rowno)
             values = []
             for cell in cells:
                 if cell.data_type == "f":
@@ -470,6 +473,9 @@ def validate_submission(question: int, submission: Path | str, base_q2: Path | s
                         horizon: int = 643, sheet: str | None = None, base_sheet: str | None = None,
                         original_path: Path | str | None = None) -> dict:
     """验证提交附件。问题三需要其问题二基础方案；问题四独立从原始附件重建。"""
+    if question == 1:
+        from q1 import validate_q1
+        return validate_q1(submission, horizon=horizon, sheet=sheet, original_path=original_path)
     result = dict(question=question, status="invalid", passed=False, errors=[], warnings=[], plans=[], conflicts=[], summary={},
                   settings=dict(horizon=horizon, frequency_range=[0, 100], interval_convention="half-open", fixed_base=question == 3,
                                 horizon_note="时间窗是建模约定，默认 [0,643)，可由教师修改；并非将 643 视为题目额外硬性条件。",

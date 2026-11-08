@@ -97,7 +97,7 @@ class ResultPanel(ttk.Frame):
             emblem.create_oval(39, 56, 45, 62, fill=light, outline=light)
         text = tk.Frame(hero, bg=dark)
         text.pack(side='left', fill='both', expand=True)
-        self._label(text, f'问题 {question}  /  附件可行性检查' if question else '解答验证器',
+        self._label(text, f'问题 {question}  /  ' + ('冲突对清单核对' if question == 1 else '附件可行性检查') if question else '解答验证器',
                     size=10, color=light, bg=dark, anchor='w')
         self.title_label = self._label(text, title, size=30, color='white', bg=dark,
                                       bold=True, anchor='w', pady=(2, 2))
@@ -108,7 +108,7 @@ class ResultPanel(ttk.Frame):
         self.view = None
         self._hero('pending' if busy else 'ready', '正在验证…' if busy else '准备检查你的方案',
                    '正在逐项核对调整规则，并检查全部重复使用区间。' if busy else
-                   '选好问题和结果附件，点击“开始验证”。也可以先载入一份可行示例。')
+                   '选择结果目录并开始验证，再点击汇总页中的各问详情。')
         if busy:
             self.progress = ttk.Progressbar(self.body, mode='indeterminate')
             self.progress.pack(fill='x', padx=20, pady=10)
@@ -160,7 +160,7 @@ class ResultPanel(ttk.Frame):
                 if key not in pairs:
                     pairs[key] = [index, 0]
                 pairs[key][1] += 1
-            self._section_heading('这些装备发生了冲突',
+            self._section_heading('原始计划的真实冲突（供核对清单）' if result.get('question') == 1 else '这些装备发生了冲突',
                                   f'已发现 {len(conflicts)} 次交叠 · 下方展示前 {min(3, len(pairs))} 对装备的首处冲突')
             for index, pair_count in list(pairs.values())[:3]:
                 conflict = conflicts[index]
@@ -200,7 +200,7 @@ class ResultPanel(ttk.Frame):
             line = tk.Frame(self.body, bg=self.BACKGROUND)
             line.pack(fill='x', padx=16, pady=(2, 12))
             ttk.Button(line, text='查看全部问题与冲突 →', command=self.show_issues).pack(side='left')
-        self._section_heading('完整统计与验证说明', '面积利用率、分类统计和九项指标。')
+        self._section_heading('完整统计与验证说明', '冲突对核对结果、漏报及多报清单。' if result.get('question') == 1 else '面积利用率、分类统计和九项指标。')
         self.summary_box = ScrolledText(self.body, wrap='word', height=12, padx=14, pady=12,
                                        bg='white', fg=self.INK, relief='flat', borderwidth=0,
                                        font=('Microsoft YaHei', 10))

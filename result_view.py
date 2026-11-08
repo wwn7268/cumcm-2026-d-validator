@@ -17,6 +17,8 @@ def _breakdown(by_category: dict, key: str, unit: str) -> str:
 
 def build_result_view(result: dict) -> dict:
     """为四张摘要卡提供可信统计；未完整检查时用 None / — 表示未知。"""
+    if result.get('question') == 1:
+        return _q1_view(result)
     summary = result.get("summary", {})
     plans = result.get("plans", [])
     old = [p for p in plans if not p.get("is_new")]
@@ -87,3 +89,36 @@ def build_result_view(result: dict) -> dict:
     if status == "feasible":
         view["notes"].append("通过表示方案可行，不表示已达到最优。")
     return view
+
+
+def _q1_view(result):
+    summary = result.get('summary', {})
+    status = result.get('status', 'invalid')
+    complete = bool(summary.get('analysis_complete'))
+    if not complete:
+        status = 'invalid'
+    titles = {'feasible': '验证通过', 'infeasible': '验证失败', 'invalid': '验证未完成'}
+    messages = {
+        'feasible': '冲突对清单完整、准确，没有漏报、多报或重复记录。',
+        'infeasible': '冲突对清单有误，请查看漏报、多报或重复记录。',
+        'invalid': '附件未完整读入，请先处理格式、编号或文件问题。',
+    }
+    metrics = []
+    for key, label, hint in [
+        ('expected_pair_count', '应有冲突对', '由原始全部周期计算'),
+        ('correct_pair_count', '正确报告', '无向装备对，去重计数'),
+        ('missing_pair_count', '漏报', '应报告但未列出的装备对'),
+        ('extra_pair_count', '多报', '实际不冲突的装备对'),
+    ]:
+        known = complete or (key == 'expected_pair_count' and bool(result.get('expected_pairs')))
+        metrics.append(dict(label=label, value=str(summary.get(key, 0)) if known else '—', hint=hint))
+    notes = ['同一装备对只列一次，装备前后顺序不影响判定。',
+             '矩阵显示原始计划的真实冲突，供核对清单；第一问通过表示清单准确。']
+    if complete:
+        notes.insert(0, f"提交 {summary.get('submitted_row_count', 0)} 行；重复记录 {summary.get('duplicate_pair_count', 0)} 行；原始交叠事件 {summary.get('expected_event_count', 0)} 次。")
+    for key, label in [('missing_pairs', '漏报'), ('extra_pairs', '多报')]:
+        pairs = result.get(key, [])
+        if pairs:
+            notes.append(label + '：' + '；'.join(f"{p['id1']} ↔ {p['id2']}" for p in pairs[:3])
+                         + ('……完整清单见“问题与冲突”及导出报告。' if len(pairs) > 3 else '。'))
+    return dict(status=status, title=titles[status], message=messages[status], metrics=metrics, notes=notes)

@@ -8,6 +8,7 @@ from openpyxl.styles import Font,PatternFill,Alignment
 from visuals import make_figure
 
 STATUS={'feasible':'可行','infeasible':'不可行','invalid':'输入错误或校验未完成'}
+Q1_STATUS={'feasible':'验证通过（冲突清单准确）','infeasible':'验证失败（冲突清单有误）','invalid':'输入错误或校验未完成'}
 METRIC_LABELS={'executed_count':'执行装备数','rectangle_count':'使用矩形数','added_count':'新增C类数量',
               'occupied_area':'实际占用并集面积','demand_area':'各次占用面积之和','conflicting_cells':'冲突单元数',
               'conflict_pairs':'冲突装备对数','conflict_events':'交叠事件数','max_overlap':'最大同时占用数',
@@ -21,12 +22,18 @@ METRIC_LABELS={'executed_count':'执行装备数','rectangle_count':'使用矩�
               'overlap_excess_area':'重复占用面积','conflicts_truncated':'冲突明细是否截断',
               'conflict_counts':'冲突类型统计','max_end':'最后结束时刻','min_start':'最早开始时刻',
               'metrics_valid_for_feasible_plan':'指标是否来自可行方案'}
+METRIC_LABELS.update(expected_pair_count='应有冲突装备对数', expected_event_count='原始交叠事件数',
+                     submitted_row_count='提交数据行数', submitted_pair_count='提交的不同装备对数',
+                     correct_pair_count='正确报告对数', missing_pair_count='漏报对数',
+                     extra_pair_count='多报对数', duplicate_pair_count='重复记录行数')
 
 def text_of(item):
     if isinstance(item,dict):return str(item.get('message',item))
     return str(item)
 
 def summary_text(result):
+    if result.get('question') == 1:
+        return q1_summary_text(result)
     settings=result.get('settings',{});s=result.get('summary',{})
     lines=[f'问题{result.get("question")}：{STATUS.get(result.get("status"),result.get("status","未知"))}',
            f'验证时间窗口：[0,{settings.get("horizon",643)})；频率窗口：[0,100)',
@@ -78,6 +85,37 @@ def summary_text(result):
             '默认时间上限643沿用原计划最晚结束时刻；这是验证设置，应与论文的假设一致。']
     return '\n'.join(lines)
 
+
+def q1_summary_text(result):
+    summary = result.get('summary', {})
+    lines = ['问题1：' + Q1_STATUS.get(result.get('status'), '未知'),
+             '核对原始150台装备全部周期中的无向冲突对；同一对只列一次，前后顺序可交换。',
+             '验证通过表示清单准确。矩阵中的原始冲突是核对依据，不表示清单验证失败。',
+             '问题一不按输入时间窗裁剪冲突真值。']
+    if result.get('settings', {}).get('input_file'):
+        lines.append('提交附件：' + result['settings']['input_file'])
+    lines += ['', '核对结果：']
+    for key in ('expected_pair_count', 'expected_event_count', 'submitted_row_count', 'submitted_pair_count',
+                'correct_pair_count', 'missing_pair_count', 'extra_pair_count', 'duplicate_pair_count'):
+        known = summary.get('analysis_complete') or (key.startswith('expected_') and result.get('expected_pairs'))
+        value = summary.get(key, '—') if known else '—'
+        lines.append(f'  {METRIC_LABELS[key]}：{value}')
+    for key, title in [('missing_pairs', '漏报清单'), ('extra_pairs', '多报清单'), ('duplicate_pairs', '重复清单')]:
+        pairs = result.get(key, [])
+        if pairs:
+            lines += ['', title + '：']
+            for pair in pairs:
+                location = f"（第{pair['row']}行）" if pair.get('row') else ''
+                lines.append(f"  {pair['id1']} ↔ {pair['id2']}{location}")
+    if result.get('errors'):
+        lines += ['', '需要处理的问题：']
+        for issue in result['errors']:
+            where = f"第{issue['row']}行：" if isinstance(issue, dict) and issue.get('row') else ''
+            lines.append('  ' + where + text_of(issue))
+    for warning in result.get('warnings', []):
+        lines.append(text_of(warning))
+    return '\n'.join(lines)
+
 def safe_value(v):
     if isinstance(v,(dict,list,tuple)):v=json.dumps(v,ensure_ascii=False)
     if isinstance(v,str) and v[:1] in ('=','+','-','@','\t','\r'):return "'"+v
@@ -96,9 +134,10 @@ def export_report(result, directory):
         for t,row in enumerate(counts):writer.writerow([t,*map(int,row)])
     wb=Workbook();overview=wb.active;overview.title='验证摘要'
     overview.append(['项目','结果'])
-    overview.append(['判定',STATUS.get(result.get('status'),result.get('status'))])
+    status_labels = Q1_STATUS if result.get('question') == 1 else STATUS
+    overview.append(['判定',status_labels.get(result.get('status'),result.get('status'))])
     overview.append(['问题',result.get('question')])
-    overview.append(['验证范围','可行性；不证明最优性'])
+    overview.append(['验证范围','原始冲突清单的完整性与准确性' if result.get('question') == 1 else '可行性；不证明最优性'])
     for key,value in result.get('summary',{}).items():
         if 'utilization' in key and isinstance(value,(int,float)):value=f'{value:.6%}'
         overview.append([METRIC_LABELS.get(key,key),safe_value(value)])
@@ -109,6 +148,14 @@ def export_report(result, directory):
         else:error_ws.append(['','','','',safe_value(str(error))])
     conflict_ws=wb.create_sheet('时频冲突');conflict_ws.append(['类型','装备1','第几次1','装备2','第几次2','频段下界','频段上界','时间下界','时间上界'])
     for c in result.get('conflicts',[]):conflict_ws.append([safe_value(c.get(k,'')) for k in ('kind','id1','use1','id2','use2','f0','f1','t0','t1')])
+    if result.get('question') == 1:
+        conflict_ws.title = '原始交叠事件'
+        for key, title in [('expected_pairs', '应有冲突对'), ('submitted_pairs', '提交的不同装备对'),
+                           ('missing_pairs', '漏报冲突对'), ('extra_pairs', '多报装备对'), ('duplicate_pairs', '重复记录')]:
+            page = wb.create_sheet(title)
+            page.append(['装备1', '装备2', '提交行号', '首次行号'])
+            for pair in result.get(key, []):
+                page.append([safe_value(pair.get(k, '')) for k in ('id1', 'id2', 'row', 'first_row')])
     plan_ws=wb.create_sheet('重建执行计划');keys=['id','cls','f0','f1','t0','t1','gap','count','canceled','action','is_new','df','dt','dg']
     plan_ws.append(['编号','类别','频段下界','频段上界','首次开始','首次结束','空闲间隔','使用次数','撤销','动作','新增','频率变化量','首次时间变化量','间隔变化量'])
     for p in result.get('plans',[]):

@@ -1,0 +1,1043 @@
+{
+  "horizon": 643,
+  "cases": [
+    {
+      "case": "01_子目录内四问齐全",
+      "selected_directory": "examples/四问目录测试示例/01_子目录内四问齐全/方案附件",
+      "passed": true,
+      "results": {
+        "1": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "expected_pair_count": 297,
+            "submitted_pair_count": 297,
+            "submitted_row_count": 297,
+            "correct_pair_count": 297,
+            "missing_pair_count": 0,
+            "extra_pair_count": 0,
+            "duplicate_pair_count": 0,
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 20,
+                "adjusted": 0,
+                "canceled": 0,
+                "amplitude": 0,
+                "frequency_adjusted": 0,
+                "time_adjusted": 0,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 40,
+                "adjusted": 0,
+                "canceled": 0,
+                "amplitude": 0,
+                "frequency_adjusted": 0,
+                "time_adjusted": 0,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 90,
+                "adjusted": 0,
+                "canceled": 0,
+                "amplitude": 0,
+                "frequency_adjusted": 0,
+                "time_adjusted": 0,
+                "gap_adjusted": 0
+              }
+            },
+            "added_count": 0,
+            "frequency_adjusted": 0,
+            "time_adjusted": 0,
+            "gap_adjusted": 0,
+            "executed_count": 150,
+            "rectangle_count": 1300,
+            "demand_area": 16680,
+            "occupied_area": 14698,
+            "conflicting_cells": 1842,
+            "overlap_excess_area": 1982,
+            "max_overlap": 4,
+            "window_area": 64300,
+            "utilization": 0.22858475894245722,
+            "conflict_events": 431,
+            "conflict_pairs": 297,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 431,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 0,
+            "expected_event_count": 431,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        },
+        "2": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34,
+              678,
+              86,
+              197
+            ],
+            "objective_six": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 4,
+                "adjusted": 16,
+                "canceled": 0,
+                "amplitude": 86,
+                "frequency_adjusted": 10,
+                "time_adjusted": 6,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 2,
+                "adjusted": 34,
+                "canceled": 4,
+                "amplitude": 197,
+                "frequency_adjusted": 27,
+                "time_adjusted": 7,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 12,
+                "adjusted": 76,
+                "canceled": 2,
+                "amplitude": 395,
+                "frequency_adjusted": 54,
+                "time_adjusted": 22,
+                "gap_adjusted": 0
+              }
+            },
+            "added_count": 0,
+            "frequency_adjusted": 91,
+            "time_adjusted": 35,
+            "gap_adjusted": 0,
+            "executed_count": 144,
+            "rectangle_count": 1260,
+            "demand_area": 15816,
+            "occupied_area": 15816,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.2459720062208398,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 2,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        },
+        "3": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34,
+              678,
+              86,
+              197
+            ],
+            "objective_six": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 4,
+                "adjusted": 16,
+                "canceled": 0,
+                "amplitude": 86,
+                "frequency_adjusted": 10,
+                "time_adjusted": 6,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 2,
+                "adjusted": 34,
+                "canceled": 4,
+                "amplitude": 197,
+                "frequency_adjusted": 27,
+                "time_adjusted": 7,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 12,
+                "adjusted": 76,
+                "canceled": 2,
+                "amplitude": 395,
+                "frequency_adjusted": 54,
+                "time_adjusted": 22,
+                "gap_adjusted": 0
+              }
+            },
+            "added_count": 136,
+            "frequency_adjusted": 91,
+            "time_adjusted": 35,
+            "gap_adjusted": 0,
+            "executed_count": 280,
+            "rectangle_count": 2892,
+            "demand_area": 25608,
+            "occupied_area": 25608,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.39825816485225507,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 0,
+            "base_occupied_area": 15816,
+            "added_demand_area": 9792,
+            "base_utilization": 0.2459720062208398,
+            "added_occupied_area": 9792,
+            "utilization_increase": 0.15228615863141523,
+            "remaining_resource_utilization": 0.20196353436185133,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        },
+        "4": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              4,
+              0,
+              2,
+              140,
+              18,
+              34,
+              775,
+              84,
+              199
+            ],
+            "objective_six": [
+              4,
+              0,
+              2,
+              140,
+              18,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 2,
+                "adjusted": 18,
+                "canceled": 0,
+                "amplitude": 84,
+                "frequency_adjusted": 10,
+                "time_adjusted": 8,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 4,
+                "adjusted": 34,
+                "canceled": 2,
+                "amplitude": 199,
+                "frequency_adjusted": 19,
+                "time_adjusted": 15,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 0,
+                "adjusted": 88,
+                "canceled": 2,
+                "amplitude": 492,
+                "frequency_adjusted": 37,
+                "time_adjusted": 10,
+                "gap_adjusted": 41
+              }
+            },
+            "added_count": 0,
+            "frequency_adjusted": 66,
+            "time_adjusted": 33,
+            "gap_adjusted": 41,
+            "executed_count": 146,
+            "rectangle_count": 1268,
+            "demand_area": 16176,
+            "occupied_area": 16176,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.25157076205287715,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 2,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        }
+      }
+    },
+    {
+      "case": "02_缺少第一问",
+      "selected_directory": "examples/四问目录测试示例/02_缺少第一问",
+      "passed": false,
+      "results": {
+        "1": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "missing",
+          "summary": {},
+          "error_codes": [
+            "batch_missing"
+          ]
+        },
+        "2": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34,
+              678,
+              86,
+              197
+            ],
+            "objective_six": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 4,
+                "adjusted": 16,
+                "canceled": 0,
+                "amplitude": 86,
+                "frequency_adjusted": 10,
+                "time_adjusted": 6,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 2,
+                "adjusted": 34,
+                "canceled": 4,
+                "amplitude": 197,
+                "frequency_adjusted": 27,
+                "time_adjusted": 7,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 12,
+                "adjusted": 76,
+                "canceled": 2,
+                "amplitude": 395,
+                "frequency_adjusted": 54,
+                "time_adjusted": 22,
+                "gap_adjusted": 0
+              }
+            },
+            "added_count": 0,
+            "frequency_adjusted": 91,
+            "time_adjusted": 35,
+            "gap_adjusted": 0,
+            "executed_count": 144,
+            "rectangle_count": 1260,
+            "demand_area": 15816,
+            "occupied_area": 15816,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.2459720062208398,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 2,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        },
+        "3": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34,
+              678,
+              86,
+              197
+            ],
+            "objective_six": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 4,
+                "adjusted": 16,
+                "canceled": 0,
+                "amplitude": 86,
+                "frequency_adjusted": 10,
+                "time_adjusted": 6,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 2,
+                "adjusted": 34,
+                "canceled": 4,
+                "amplitude": 197,
+                "frequency_adjusted": 27,
+                "time_adjusted": 7,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 12,
+                "adjusted": 76,
+                "canceled": 2,
+                "amplitude": 395,
+                "frequency_adjusted": 54,
+                "time_adjusted": 22,
+                "gap_adjusted": 0
+              }
+            },
+            "added_count": 136,
+            "frequency_adjusted": 91,
+            "time_adjusted": 35,
+            "gap_adjusted": 0,
+            "executed_count": 280,
+            "rectangle_count": 2892,
+            "demand_area": 25608,
+            "occupied_area": 25608,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.39825816485225507,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 0,
+            "base_occupied_area": 15816,
+            "added_demand_area": 9792,
+            "base_utilization": 0.2459720062208398,
+            "added_occupied_area": 9792,
+            "utilization_increase": 0.15228615863141523,
+            "remaining_resource_utilization": 0.20196353436185133,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        },
+        "4": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              4,
+              0,
+              2,
+              140,
+              18,
+              34,
+              775,
+              84,
+              199
+            ],
+            "objective_six": [
+              4,
+              0,
+              2,
+              140,
+              18,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 2,
+                "adjusted": 18,
+                "canceled": 0,
+                "amplitude": 84,
+                "frequency_adjusted": 10,
+                "time_adjusted": 8,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 4,
+                "adjusted": 34,
+                "canceled": 2,
+                "amplitude": 199,
+                "frequency_adjusted": 19,
+                "time_adjusted": 15,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 0,
+                "adjusted": 88,
+                "canceled": 2,
+                "amplitude": 492,
+                "frequency_adjusted": 37,
+                "time_adjusted": 10,
+                "gap_adjusted": 41
+              }
+            },
+            "added_count": 0,
+            "frequency_adjusted": 66,
+            "time_adjusted": 33,
+            "gap_adjusted": 41,
+            "executed_count": 146,
+            "rectangle_count": 1268,
+            "demand_area": 16176,
+            "occupied_area": 16176,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.25157076205287715,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 2,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        }
+      }
+    },
+    {
+      "case": "03_第一问漏报一对",
+      "selected_directory": "examples/四问目录测试示例/03_第一问漏报一对",
+      "passed": false,
+      "results": {
+        "1": {
+          "passed": false,
+          "status": "infeasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "expected_pair_count": 297,
+            "submitted_pair_count": 296,
+            "submitted_row_count": 296,
+            "correct_pair_count": 296,
+            "missing_pair_count": 1,
+            "extra_pair_count": 0,
+            "duplicate_pair_count": 0,
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 20,
+                "adjusted": 0,
+                "canceled": 0,
+                "amplitude": 0,
+                "frequency_adjusted": 0,
+                "time_adjusted": 0,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 40,
+                "adjusted": 0,
+                "canceled": 0,
+                "amplitude": 0,
+                "frequency_adjusted": 0,
+                "time_adjusted": 0,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 90,
+                "adjusted": 0,
+                "canceled": 0,
+                "amplitude": 0,
+                "frequency_adjusted": 0,
+                "time_adjusted": 0,
+                "gap_adjusted": 0
+              }
+            },
+            "added_count": 0,
+            "frequency_adjusted": 0,
+            "time_adjusted": 0,
+            "gap_adjusted": 0,
+            "executed_count": 150,
+            "rectangle_count": 1300,
+            "demand_area": 16680,
+            "occupied_area": 14698,
+            "conflicting_cells": 1842,
+            "overlap_excess_area": 1982,
+            "max_overlap": 4,
+            "window_area": 64300,
+            "utilization": 0.22858475894245722,
+            "conflict_events": 431,
+            "conflict_pairs": 297,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 431,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 0,
+            "expected_event_count": 431,
+            "metrics_valid_for_feasible_plan": false
+          },
+          "error_codes": [
+            "missing_pairs"
+          ]
+        },
+        "2": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34,
+              678,
+              86,
+              197
+            ],
+            "objective_six": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 4,
+                "adjusted": 16,
+                "canceled": 0,
+                "amplitude": 86,
+                "frequency_adjusted": 10,
+                "time_adjusted": 6,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 2,
+                "adjusted": 34,
+                "canceled": 4,
+                "amplitude": 197,
+                "frequency_adjusted": 27,
+                "time_adjusted": 7,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 12,
+                "adjusted": 76,
+                "canceled": 2,
+                "amplitude": 395,
+                "frequency_adjusted": 54,
+                "time_adjusted": 22,
+                "gap_adjusted": 0
+              }
+            },
+            "added_count": 0,
+            "frequency_adjusted": 91,
+            "time_adjusted": 35,
+            "gap_adjusted": 0,
+            "executed_count": 144,
+            "rectangle_count": 1260,
+            "demand_area": 15816,
+            "occupied_area": 15816,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.2459720062208398,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 2,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        },
+        "3": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34,
+              678,
+              86,
+              197
+            ],
+            "objective_six": [
+              6,
+              0,
+              4,
+              126,
+              16,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 4,
+                "adjusted": 16,
+                "canceled": 0,
+                "amplitude": 86,
+                "frequency_adjusted": 10,
+                "time_adjusted": 6,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 2,
+                "adjusted": 34,
+                "canceled": 4,
+                "amplitude": 197,
+                "frequency_adjusted": 27,
+                "time_adjusted": 7,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 12,
+                "adjusted": 76,
+                "canceled": 2,
+                "amplitude": 395,
+                "frequency_adjusted": 54,
+                "time_adjusted": 22,
+                "gap_adjusted": 0
+              }
+            },
+            "added_count": 136,
+            "frequency_adjusted": 91,
+            "time_adjusted": 35,
+            "gap_adjusted": 0,
+            "executed_count": 280,
+            "rectangle_count": 2892,
+            "demand_area": 25608,
+            "occupied_area": 25608,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.39825816485225507,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 0,
+            "base_occupied_area": 15816,
+            "added_demand_area": 9792,
+            "base_utilization": 0.2459720062208398,
+            "added_occupied_area": 9792,
+            "utilization_increase": 0.15228615863141523,
+            "remaining_resource_utilization": 0.20196353436185133,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        },
+        "4": {
+          "passed": true,
+          "status": "feasible",
+          "batch_state": null,
+          "summary": {
+            "analysis_complete": true,
+            "objective_tuple": [
+              4,
+              0,
+              2,
+              140,
+              18,
+              34,
+              775,
+              84,
+              199
+            ],
+            "objective_six": [
+              4,
+              0,
+              2,
+              140,
+              18,
+              34
+            ],
+            "by_category": {
+              "A": {
+                "total": 20,
+                "kept": 2,
+                "adjusted": 18,
+                "canceled": 0,
+                "amplitude": 84,
+                "frequency_adjusted": 10,
+                "time_adjusted": 8,
+                "gap_adjusted": 0
+              },
+              "B": {
+                "total": 40,
+                "kept": 4,
+                "adjusted": 34,
+                "canceled": 2,
+                "amplitude": 199,
+                "frequency_adjusted": 19,
+                "time_adjusted": 15,
+                "gap_adjusted": 0
+              },
+              "C": {
+                "total": 90,
+                "kept": 0,
+                "adjusted": 88,
+                "canceled": 2,
+                "amplitude": 492,
+                "frequency_adjusted": 37,
+                "time_adjusted": 10,
+                "gap_adjusted": 41
+              }
+            },
+            "added_count": 0,
+            "frequency_adjusted": 66,
+            "time_adjusted": 33,
+            "gap_adjusted": 41,
+            "executed_count": 146,
+            "rectangle_count": 1268,
+            "demand_area": 16176,
+            "occupied_area": 16176,
+            "conflicting_cells": 0,
+            "overlap_excess_area": 0,
+            "max_overlap": 1,
+            "window_area": 64300,
+            "utilization": 0.25157076205287715,
+            "conflict_events": 0,
+            "conflict_pairs": 0,
+            "conflicts_truncated": false,
+            "conflict_counts": {
+              "原有—原有": 0,
+              "原有—新增": 0,
+              "新增—新增": 0
+            },
+            "max_end": 643,
+            "min_start": 2,
+            "metrics_valid_for_feasible_plan": true
+          },
+          "error_codes": []
+        }
+      }
+    },
+    {
+      "case": "04_多个完整子目录",
+      "selected_directory": "examples/四问目录测试示例/04_多个完整子目录",
+      "passed": false,
+      "results": {
+        "1": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "ambiguous",
+          "summary": {},
+          "error_codes": [
+            "batch_ambiguous"
+          ]
+        },
+        "2": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "ambiguous",
+          "summary": {},
+          "error_codes": [
+            "batch_ambiguous"
+          ]
+        },
+        "3": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "ambiguous",
+          "summary": {},
+          "error_codes": [
+            "batch_ambiguous"
+          ]
+        },
+        "4": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "ambiguous",
+          "summary": {},
+          "error_codes": [
+            "batch_ambiguous"
+          ]
+        }
+      }
+    },
+    {
+      "case": "05_子目录仍缺少全部结果",
+      "selected_directory": "examples/四问目录测试示例/05_子目录仍缺少全部结果",
+      "passed": false,
+      "results": {
+        "1": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "missing",
+          "summary": {},
+          "error_codes": [
+            "batch_missing"
+          ]
+        },
+        "2": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "missing",
+          "summary": {},
+          "error_codes": [
+            "batch_missing"
+          ]
+        },
+        "3": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "missing",
+          "summary": {},
+          "error_codes": [
+            "batch_missing"
+          ]
+        },
+        "4": {
+          "passed": false,
+          "status": "invalid",
+          "batch_state": "missing",
+          "summary": {},
+          "error_codes": [
+            "batch_missing"
+          ]
+        }
+      }
+    }
+  ]
+}
